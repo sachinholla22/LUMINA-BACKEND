@@ -1,0 +1,26 @@
+
+services:
+
+    langchains:
+        build:
+          context: ./UpdatedAiModel/LUMINA-AI-ASSISTANT-MODEL
+        container_name: langchains
+        ports:
+          - "5000:5000"
+        networks:
+            - microservicenet
+
+    spring-service:
+        build:
+          context: ./backend-spring/demo
+        container_name: spring-service
+        ports:
+          - "8080:8080" 
+        networks:
+            - microservicenet
+        depends_on:
+            - langchains
+
+networks:
+    microservicenet:
+        driver: bridge                             
