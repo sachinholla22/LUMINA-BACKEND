@@ -1,0 +1,26 @@
+{
+  "name": "langchain-ai-model",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node CLI/cli.js",
+    "server": "node server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "@langchain/core": "^0.3.57",
+    "@langchain/mistralai": "^0.2.0",
+    "@langchain/openai": "^0.5.11",
+    "body-parser": "^2.2.0",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "langchain": "^0.3.27",
+    "natural": "^8.1.0",
+    "nodemon": "^3.1.10",
+    "openai": "^4.103.0"
+  }
+}
