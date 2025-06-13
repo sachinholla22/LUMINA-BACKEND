@@ -1,0 +1,110 @@
+                           +-------------------+
+                           |   👩‍💻 User (Browser)  |
+                           +---------+---------+
+                                     |
+                    1️⃣ File Upload / Text Input / Audio Input
+                                     |
+                           +---------v----------+
+                           |     🌐 Next.js UI   |
+                           |  (React + Tailwind) |
+                           +---------+----------+
+                                     |
+                             2️⃣ API Request
+                                     |
+                           +---------v----------+
+                           |  🔧 Spring Boot API |
+                           | (Auth, Routing, DB) |
+                           +--+---------+--------+
+                              |         |
+               ┌──────────────┘         └──────────────────┐
+        3️⃣ Audio File?                            4️⃣ Text/Image/PDF?
+         Send to:                                    Send to:
+  +---------------------+                 +---------------------------+
+  | 🗣️ Whisper API (Python)|                 | 🧠 LangChain.js (Node.js) |
+  | (Audio → Text)        |                 | (LLM Orchestration)       |
+  +----------+------------+                 +-------------+-------------+
+             |                                                |
+     3️⃣ Transcribed Text                                | Embedding generation
+             |                                                |
+             |                                      5️⃣ Vector Search in:
+             |                                      +-------------------+
+             |                                      | 🟡 Pinecone Vector DB |
+             |                                      +---------+---------+
+             |                                                |
+             |                                      6️⃣ Retrieve relevant context
+             |                                                |
+             |                                     7️⃣ Send prompt to:
+             |                                      +-------------------+
+             |                                      | 🤖 GPT-4 / LLM API |
+             |                                      +---------+---------+
+             |                                                |
+             └──────────────8️⃣ Final Answer, Summary, Quiz ←─┘
+                                     |
+                           +---------v----------+
+                           |  🗃️ MySQL Database   |
+                           | (User Info, History,|
+                           |  File Metadata)     |
+                           +---------+----------+
+                                     |
+                             9️⃣ Final Response
+                                     |
+                           +---------v----------+
+                           |   🌐 Next.js UI     |
+                           | (Display Insights) |
+                           +--------------------+
+
+
+
+{
+  id: string,             // unique ID (e.g., UUID, timestamp, or hash of input)
+  values: number[],       // vector embedding (e.g., 1536 floats from OpenAI or HuggingFace)
+  metadata: {
+    input: string,               // user query or message
+    response: string,            // assistant's response
+    feedback?: string | null,    // optional: good, bad, thumbs-up/down
+    isResearchRelated?: boolean,
+    topic?: string,              // optional: manually or auto-extracted topic
+    learningPhase: "supervised" | "unsupervised",
+    timestamp: string            // ISO string
+  }
+}
+
+
+{
+  "id": "msg_20250607T121530",
+  "values": [0.0031, -0.1274, 0.5732, ...],
+  "metadata": {
+    "input": "What is unsupervised learning?",
+    "response": "Unsupervised learning is a machine learning technique where...",
+    "feedback": "positive",
+    "isResearchRelated": true,
+    "topic": "machine learning",
+    "learningPhase": "supervised",
+    "timestamp": "2025-06-07T12:15:30.123Z"
+  }
+}
+
+
+ Where to get values (embeddings)?
+Use:
+
+OpenAI Embeddings: text-embedding-3-small (recommended)
+
+Hugging Face: sentence-transformers/all-MiniLM-L6-v2 (free)
+
+Mistral / other custom models: depending on your stack
+
+ What to Query Against in Pinecone?
+You send a new query embedding and Pinecone will return the most semantically similar past interactions. This lets your assistant:
+
+Retrieve relevant past research threads.
+
+Ground responses based on prior knowledge.
+
+Cluster similar topics or inputs for "unsupervised learning."
+
+✅ Summary
+Field	Purpose
+id	Unique identifier for the interaction
+values	Embedding of the input (or input + response)
+metadata	Labels and context like response, feedback, topic, etc.
